@@ -10,11 +10,8 @@ export class ImageNetController {
     return this.imageNetService.parseXml() as any;
   }
 
-  @Get('tree')
-  async getTree(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 100,
-  ) {
-    return this.imageNetService.getTree(page, limit);
+  @Get('tree2')
+  async getAllData() {
+    return this.imageNetService.getAllData(); // Call a method to fetch all data
   }
 }

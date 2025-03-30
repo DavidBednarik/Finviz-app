@@ -5,11 +5,25 @@ function TreeNode({ node }: any) {
 
 	return (
 		<div>
-			<div onClick={() => setExpanded(!expanded)}>
+			<div
+				onClick={() => setExpanded(!expanded)}
+				style={{
+					backgroundColor: node.size > 0 && expanded ? "#ADD8E6" : "white",
+					width: "fit-content",
+					padding: 5,
+					margin: 5,
+					borderRadius: 5,
+					cursor: "pointer",
+				}}
+			>
 				{node.name} ({node.size})
 			</div>
 			{expanded && node.children && (
-				<div style={{ marginLeft: "20px" }}>
+				<div
+					style={{
+						marginLeft: "20px",
+					}}
+				>
 					{node.children.map((child: any, index: number) => (
 						<TreeNode key={index} node={child} />
 					))}
@@ -35,7 +49,7 @@ function App() {
 
 	useEffect(() => {
 		// Fetch tree data from the backend (with pagination)
-		fetch("http://localhost:3000/imagenet/tree?page=1&limit=100")
+		fetch("http://localhost:3000/imagenet/tree2")
 			.then((res) => res.json())
 			.then((data) => setTreeData(data));
 	}, []);

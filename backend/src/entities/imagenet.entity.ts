@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class ImageNet {
@@ -10,4 +17,12 @@ export class ImageNet {
 
   @Column({ type: 'int' })
   size: number;
+
+  @ManyToOne(() => ImageNet, (imagenet) => imagenet.children, {
+    nullable: true,
+  })
+  parent: ImageNet;
+
+  @OneToMany(() => ImageNet, (imagenet) => imagenet.parent)
+  children: ImageNet[];
 }

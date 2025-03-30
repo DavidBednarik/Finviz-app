@@ -31,6 +31,7 @@ export class ImageNetService {
       });
 
       const result = await parser.parseStringPromise(xmlContent);
+      console.log(result);
 
       const flatStructure = transformToLinear(result);
 
@@ -45,22 +46,11 @@ export class ImageNetService {
         const batch = formattedData.slice(i, i + batchSize);
         await this.imageNetRepository.save(batch);
       }
-
       return { message: 'Data stored successfully!' };
     } catch (error) {
       console.error('Error in parseXML:', error);
       throw new Error('Failed to parse XML');
     }
-  }
-
-  async getTree(page: number = 1, limit: number = 100): Promise<any> {
-    const offset = (page - 1) * limit;
-    const data = await this.imageNetRepository.find({
-      skip: offset,
-      take: limit,
-    });
-
-    return this.buildTree(data);
   }
 
   private buildTree(flatData: ImageNet[]): any {
@@ -77,18 +67,17 @@ export class ImageNetService {
           current[part] = { name: part, children: {}, size: 0 };
         }
 
-        // Accumulate size at each level
-        current[part].size += item.size;
-
+        // If it's the last part, it's the leaf node, so we set the size directly
         if (i === parts.length - 1) {
-          // At the leaf level, store the size from the database
           current[part].size = item.size;
+        } else {
+          // Accumulate size for non-leaf nodes
+          current[part].size += item.size;
         }
 
         current = current[part].children;
       }
     });
-
     return this.formatTree(tree);
   }
 
@@ -101,5 +90,11 @@ export class ImageNetService {
         children: this.formatTree(child.children),
       };
     });
+  }
+
+  // Method to get all data without pagination
+  async getAllData(): Promise<any> {
+    const data = await this.imageNetRepository.find();
+    return this.buildTree(data);
   }
 }
