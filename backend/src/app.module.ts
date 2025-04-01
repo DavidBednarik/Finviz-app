@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImageNet } from './entities/imagenet.entity';
 import { ImageNetModule } from './imagenet/imagenet.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -18,5 +20,7 @@ import { ImageNetModule } from './imagenet/imagenet.module';
     TypeOrmModule.forFeature([ImageNet]),
     ImageNetModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

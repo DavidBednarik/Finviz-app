@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ImageNetService } from './imagenet.service';
 import { ImageNetController } from './imagenet.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ImageNet } from 'src/entities/imagenet.entity';
+import { ImageNet } from '../entities/imagenet.entity';
 
 @Module({
   imports: [

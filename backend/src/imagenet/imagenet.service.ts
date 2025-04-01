@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as xml2js from 'xml2js';
-import { transformToLinear } from 'src/utils/utils';
+import { transformToLinear } from '../utils/utils';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ImageNet } from 'src/entities/imagenet.entity';
+import { ImageNet } from '../entities/imagenet.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
