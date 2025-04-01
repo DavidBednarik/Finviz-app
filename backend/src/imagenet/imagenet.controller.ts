@@ -10,7 +10,7 @@ export class ImageNetController {
     return this.imageNetService.parseXml() as any;
   }
 
-  @Get('tree2')
+  @Get('tree')
   async getAllData() {
     return this.imageNetService.getAllData(); // Call a method to fetch all data
   }

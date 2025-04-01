@@ -31,7 +31,6 @@ export class ImageNetService {
       });
 
       const result = await parser.parseStringPromise(xmlContent);
-      console.log(result);
 
       const flatStructure = transformToLinear(result);
 
@@ -64,20 +63,19 @@ export class ImageNetService {
         const part = parts[i];
 
         if (!current[part]) {
-          current[part] = { name: part, children: {}, size: 0 };
+          current[part] = { name: part, children: {} };
         }
 
         // If it's the last part, it's the leaf node, so we set the size directly
         if (i === parts.length - 1) {
           current[part].size = item.size;
-        } else {
-          // Accumulate size for non-leaf nodes
-          current[part].size += item.size;
         }
 
+        // Move to the children object for the next iteration
         current = current[part].children;
       }
     });
+
     return this.formatTree(tree);
   }
 
