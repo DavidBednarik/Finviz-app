@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type ImageNet = {
 	name: string;
@@ -8,12 +8,47 @@ type ImageNet = {
 
 type TreeNodeProps = {
 	node: ImageNet;
+	searchTerm: string;
 };
 
-const TreeNode = ({ node }: TreeNodeProps) => {
+const TreeNode = ({ node, searchTerm }: TreeNodeProps) => {
 	const [expanded, setExpanded] = useState(false);
 
 	const handleExpandCategory = () => setExpanded(!expanded);
+
+	const containsSearchTerm = (node: ImageNet): boolean => {
+		if (node.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+			return true;
+		}
+		if (node.children) {
+			return node.children.some((child) => containsSearchTerm(child));
+		}
+		return false;
+	};
+
+	useEffect(() => {
+		if (searchTerm) {
+			setExpanded(containsSearchTerm(node));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [searchTerm]);
+
+	const getHighlightedName = () => {
+		if (!searchTerm) return node.name;
+
+		const regex = new RegExp(`(${searchTerm})`, "gi");
+		const parts = node.name.split(regex);
+
+		return parts.map((part: string, i: number) =>
+			part.toLowerCase() === searchTerm.toLowerCase() ? (
+				<span key={i} style={{ backgroundColor: "yellow" }}>
+					{part}
+				</span>
+			) : (
+				<span key={i}>{part}</span>
+			)
+		);
+	};
 
 	return (
 		<div>
@@ -28,7 +63,7 @@ const TreeNode = ({ node }: TreeNodeProps) => {
 					cursor: "pointer",
 				}}
 			>
-				{node.name} ({node.size})
+				{getHighlightedName()} ({node.size})
 			</div>
 			{expanded && node.children && (
 				<div
@@ -37,7 +72,7 @@ const TreeNode = ({ node }: TreeNodeProps) => {
 					}}
 				>
 					{node.children.map((child: any, index: number) => (
-						<TreeNode key={index} node={child} />
+						<TreeNode key={index} node={child} searchTerm={searchTerm} />
 					))}
 				</div>
 			)}
